@@ -18,7 +18,14 @@ class CheatTest(unittest.TestCase):
     def test_remove_cards(self):
         self.assertEqual([['C6']], self.deck.remove_cards([['C6', 'D6', 'H6']], 0, ['D6', 'H6']))
 
+    def test_validate_is_cheat(self):
+        self.assertEqual(False, self.deck.validate_is_cheat(['7','7','7'],['H7','D7','C7']))
 
+    def test_update_hands(self):
+        self.assertEqual(['D6','C6'],self.deck.add_cards(['C6'],['D6']))
+
+    def test_find_winner(self):
+        self.assertEqual(0,self.deck.find_winner([[],['C6', 'D6', 'H6']]))
 
 def main():
     unittest.main()
