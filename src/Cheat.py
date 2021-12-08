@@ -7,6 +7,7 @@ class Cheat:
     Card = PlayingCard()
 
     def __init__(self):
+        self.cheat = ''
         self.players = self.get_players()
         self.computers = self.set_computer_players()
         self.turn = 0
@@ -23,17 +24,15 @@ class Cheat:
             self.computer_players.append(Computer_Player(self.deck[self.players - self.computers + i]))
         winner = None
         while winner == None:
-            if self.computer_or_player[self.turn%self.players] == 'p':
-                print(self.print_cards(self.deck, self.turn%self.players))
+            if self.computer_or_player[self.turn % self.players] == 'p':
                 cards = self.input_playcards()
                 self.deck = self.remove_cards(self.deck, self.turn % self.players, cards)
                 self.add_to_pot(cards)
                 cheatcards = self.input_cheat_cards()
                 self.is_cheat(cheatcards)
             else:
-                comp_cards = self.computer_players[self.turn%self.players].play_card(self.last_played)
+                comp_cards = self.computer_players[self.turn % self.players].play_card(self.last_played)
                 self.deck = self.remove_cards(self.deck, self.turn % self.players, comp_cards[0])
-                print('The computer played: ', ', '.join(comp_cards[1]))
                 self.add_to_pot(comp_cards[0])
                 self.is_cheat(comp_cards[1])
             winner = self.find_winner(self.deck)
@@ -63,18 +62,20 @@ class Cheat:
         return deck[player]
 
     def input_playcards(self):
+        for i in range(50):
+            print()
+        print(self.cheat)
+        print(self.print_cards(self.deck, self.turn % self.players))
         card = input('What card(s) would you like to play: ')
-        cards = []
-        cards.append(card.upper())
+        cards = [card.upper()]
         while card != '':
             card = input('What card(s) would you like to play: ')
             cards.append(card.upper())
-        valid = self.validate_entry(self.deck, self.turn%self.players, cards)
+        valid = self.validate_entry(self.deck, self.turn % self.players, cards)
         if valid == False:
             print('The cards must be in your hand')
             card = input('What card(s) would you like to play: ')
-            cards = []
-            cards.append(card.upper())
+            cards = [card.upper()]
             while card != '':
                 card = input('What card(s) would you like to play: ')
                 cards.append(card.upper())
@@ -103,44 +104,49 @@ class Cheat:
                 self.last_played.append(card)
 
     def input_cheat_cards(self):
-        for i in range(50):
-            print()
         card = input('What card(s) have you played: ')
-        cards = []
-        cards.append(card)
+        cards = [card]
         while card != '':
             card = input('What card(s) have you played: ')
             cards.append(card)
         return cards
 
     def is_cheat(self, cheatcards):
+        self.cheat = 'No one called cheat'
         cheatcalled = False
+        playercalledcheat = False
         # asks first person for player number
-        while cheatcalled == False:
-            for i in range(self.players):
-                if i != self.turn% self.players:
+        for i in range(self.players):
+            if not playercalledcheat:
+                if i != self.turn % self.players and self.computer_or_player[i] == 'p':
                     for j in range(50):
                         print()
-                    print(cheatcards)
+                    print('Player', self.turn % self.players, 'played', ', '.join(cheatcards))
                     print(self.deck[i])
-                    cheat = input('Player', i,  'do you think it is cheat(Y/N): ')
+                    print('Player', i, 'do you think it is cheat(Y/N):')
+                    cheat = input()
                     if cheat == 'Y':
+                        playercalledcheat = True
                         cheatcalled = True
-                        player = int(input('What player are you: '))
+                        player = i
                         is_cheat = self.validate_is_cheat(cheatcards, self.last_played)
                         if is_cheat == False:
                             self.deck[player] = self.add_cards(self.deck[player], self.pot)
+                            self.cheat = ('The player was not cheating')
                         else:
-                            self.deck[self.turn % self.players] = self.add_cards(self.deck[self.turn % self.players], self.pot)
+                            self.deck[self.turn % self.players] = self.add_cards(self.deck[self.turn % self.players],
+                                                                                 self.pot)
                             self.turn = player - 1
-        if cheatcalled == False:
+                            self.cheat('The player was cheating')
+
+        if not cheatcalled:
             for i in range((self.players - self.computers), len(self.computer_players)):
                 cheat = self.computer_players[i].check_is_cheat(cheatcards)
-                if cheat == True:
+                if cheat:
                     self.deck[self.turn % self.players] = self.add_cards(self.deck[self.turn % self.players], self.pot)
-                    print('the computer called cheat')
+                    print('The computer called cheat')
+                    print('The player was cheating')
                     self.turn = self.players + i - 1
-
 
     def validate_is_cheat(self, cards, last_played):
         is_cheat = False
@@ -160,5 +166,6 @@ class Cheat:
         for i in range(len(hands)):
             if not hands[i]:
                 return i
+
 
 game = Cheat()
