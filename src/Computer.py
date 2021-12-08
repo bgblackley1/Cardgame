@@ -48,6 +48,7 @@ class Computer_Player:
             self.must_cheat()
 
     def must_cheat(self):
+
         if len(self.hand) >= 4:
             playing = random.randint(1, 4)
         else:

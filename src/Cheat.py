@@ -118,12 +118,12 @@ class Cheat:
         # asks first person for player number
         while cheatcalled == False:
             for i in range(self.players):
-                if i != self.turn% player:
-                    for i in range(50):
+                if i != self.turn% self.players:
+                    for j in range(50):
                         print()
                     print(cheatcards)
-
-                    cheat = input('Do you think it is cheat(Y/N): ')
+                    print(self.deck[i])
+                    cheat = input('Player', i,  'do you think it is cheat(Y/N): ')
                     if cheat == 'Y':
                         cheatcalled = True
                         player = int(input('What player are you: '))
