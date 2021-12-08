@@ -49,6 +49,7 @@ class Cheat:
 
     def deal_deck(self, players):
         self.deck = self.Card.generate_deck()
+        self.Card.convert_faces_to_numbers(self.deck)
         self.deck = self.Card.shuffle_cards(self.deck)
         self.cheatdeck = []
         for i in range(players):
@@ -95,9 +96,11 @@ class Cheat:
         return deck
 
     def add_to_pot(self, cards):
-        for i in range(0, len(cards)-1):
-            self.pot.append(cards[i])
-        self.last_played = cards[:-1]
+        self.last_played = []
+        for card in cards:
+            if card != '':
+                self.pot.append(card)
+                self.last_played.append(card)
 
     def input_cheat_cards(self):
         for i in range(50):
@@ -111,17 +114,26 @@ class Cheat:
         return cards
 
     def is_cheat(self, cheatcards):
-        cheat = input('Do you think it is cheat(Y/N): ')
+        cheatcalled = False
         # asks first person for player number
-        if cheat == 'Y':
-            player = int(input('What player are you: '))
-            is_cheat = self.validate_is_cheat(cheatcards, self.last_played)
-            if is_cheat == False:
-                self.deck[player] = self.add_cards(self.deck[player], self.pot)
-            else:
-                self.deck[self.turn % self.players] = self.add_cards(self.deck[self.turn % self.players], self.pot)
-                self.turn = player - 1
-        else:
+        while cheatcalled == False:
+            for i in range(self.players):
+                if i != self.turn% player:
+                    for i in range(50):
+                        print()
+                    print(cheatcards)
+
+                    cheat = input('Do you think it is cheat(Y/N): ')
+                    if cheat == 'Y':
+                        cheatcalled = True
+                        player = int(input('What player are you: '))
+                        is_cheat = self.validate_is_cheat(cheatcards, self.last_played)
+                        if is_cheat == False:
+                            self.deck[player] = self.add_cards(self.deck[player], self.pot)
+                        else:
+                            self.deck[self.turn % self.players] = self.add_cards(self.deck[self.turn % self.players], self.pot)
+                            self.turn = player - 1
+        if cheatcalled == False:
             for i in range((self.players - self.computers), len(self.computer_players)):
                 cheat = self.computer_players[i].check_is_cheat(cheatcards)
                 if cheat == True:

@@ -13,8 +13,6 @@ class Computer_Player:
     def play_card(self, last_cards_played):
         self.above, self.below, self.equal = [0], [0], [0]
         self.last_cards_played = last_cards_played
-        self.playingcard.convert_faces_to_numbers(self.last_cards_played)
-        self.playingcard.convert_faces_to_numbers(self.hand)
         for card in self.hand:
             if int(card[1:]) == int(last_cards_played[0][1:]) - 1:
                 self.below[0] += 1
@@ -64,9 +62,10 @@ class Computer_Player:
     def check_is_cheat(self, last_cards_played):
         num_cards = 0
         for card in self.hand:
-            if (card[1:]) == (last_cards_played[0]):
+            if int((card[1:])) == int((last_cards_played[0])):
                 num_cards += 1
         if num_cards + len(last_cards_played) - 1 > 4:
             return True
         else:
             return False
+
