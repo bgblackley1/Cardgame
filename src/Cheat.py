@@ -133,6 +133,7 @@ class Cheat:
                 self.last_played.append(card)
 
     def input_cheat_cards(self):
+        print('You must play one below, equal or above the last played cards')
         card = input('What card have you played: ')
         cards = [card]
         while card != '':
