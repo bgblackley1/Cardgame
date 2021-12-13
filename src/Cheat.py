@@ -1,6 +1,7 @@
 from src.PlayingCard import PlayingCard
 from Computer import Computer_Player
 
+
 class Cheat:
     def __init__(self):
         self.cheat = ''

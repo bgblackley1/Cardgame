@@ -22,7 +22,7 @@ class Computer_Player:
             elif int(card[1:]) == int(last_cards_played[0][1:]) + 1:
                 self.above[0] += 1
                 self.above.append(card)
-        return(self.check_can_play())
+        return self.check_can_play()
 
     def check_can_play(self):
         cards = [self.below[0], self.equal[0], self.above[0]]
