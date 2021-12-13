@@ -1,4 +1,3 @@
-import src.Cheat
 import random
 from src.PlayingCard import PlayingCard
 
@@ -35,13 +34,13 @@ class Computer_Player:
                 cardsreturn = [played, said]
                 return cardsreturn
             elif cards[2] == self.equal[0]:
-                played = self.below[1:]
-                said = [self.below[1][1:]] * self.below[0]
+                played = self.equal[1:]
+                said = [self.equal[1][1:]] * self.equal[0]
                 cardsreturn = [played, said]
                 return cardsreturn
             elif cards[2] == self.above[0]:
-                played = self.below[1:]
-                said = [self.below[1][1:]] * self.below[0]
+                played = self.above[1:]
+                said = [self.above[1][1:]] * self.above[0]
                 cardsreturn = [played, said]
                 return cardsreturn
         else:

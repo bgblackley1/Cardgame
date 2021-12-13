@@ -1,14 +1,11 @@
 from src.PlayingCard import PlayingCard
 from Computer import Computer_Player
-import os
-
 
 class Cheat:
-    Card = PlayingCard()
-
     def __init__(self):
         self.cheat = ''
         self.players = self.get_players()
+        self.Card = PlayingCard()
         self.computers = self.set_computer_players()
         self.turn = 0
         self.last_played = []
@@ -28,13 +25,14 @@ class Cheat:
                 cards = self.input_playcards()
                 self.deck = self.remove_cards(self.deck, self.turn % self.players, cards)
                 self.add_to_pot(cards)
-                cheatcards = self.input_cheat_cards()
-                self.is_cheat(cheatcards)
+                self.cheatcards = self.input_cheat_cards()
+                self.is_cheat(self.cheatcards)
             else:
                 comp_cards = self.computer_players[self.turn % self.players].play_card(self.last_played)
                 self.deck = self.remove_cards(self.deck, self.turn % self.players, comp_cards[0])
                 self.add_to_pot(comp_cards[0])
                 self.is_cheat(comp_cards[1])
+                self.cheatcards = comp_cards[1]
             winner = self.find_winner(self.deck)
             self.turn += 1
 
@@ -55,8 +53,36 @@ class Cheat:
             self.player = []
             for j in range(52 // players):
                 self.player.append(self.deck.pop())
-            self.cheatdeck.append(self.player)
+            self.cheatdeck.append(self.mergeSort(self.player))
         return (self.cheatdeck)
+
+    def mergeSort(self,myList):
+        if len(myList) > 1:
+            mid = len(myList) // 2
+            left = myList[:mid]
+            right = myList[mid:]
+            self.mergeSort(left)
+            self.mergeSort(right)
+            i = 0
+            j = 0
+            k = 0
+            while i < len(left) and j < len(right):
+                if left[i][1:] <= right[j][1:]:
+                    myList[k] = left[i]
+                    i += 1
+                else:
+                    myList[k] = right[j]
+                    j += 1
+                k += 1
+            while i < len(left):
+                myList[k] = left[i]
+                i += 1
+                k += 1
+            while j < len(right):
+                myList[k] = right[j]
+                j += 1
+                k += 1
+        return(myList)
 
     def print_cards(self, deck, player):
         return deck[player]
@@ -66,6 +92,8 @@ class Cheat:
             print()
         print(self.cheat)
         print(self.print_cards(self.deck, self.turn % self.players))
+        if self.turn != 0:
+            print('Player', (self.turn-1) % self.players, 'played', ', '.join(self.cheatcards))
         card = input('What card(s) would you like to play: ')
         cards = [card.upper()]
         while card != '':
@@ -104,10 +132,10 @@ class Cheat:
                 self.last_played.append(card)
 
     def input_cheat_cards(self):
-        card = input('What card(s) have you played: ')
+        card = input('What card have you played: ')
         cards = [card]
         while card != '':
-            card = input('What card(s) have you played: ')
+            card = input('What card have you played: ')
             cards.append(card)
         return cards
 
@@ -166,6 +194,5 @@ class Cheat:
         for i in range(len(hands)):
             if not hands[i]:
                 return i
-
 
 game = Cheat()
